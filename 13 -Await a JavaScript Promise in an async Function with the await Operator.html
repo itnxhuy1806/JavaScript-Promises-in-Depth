@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <link rel="icon" href="favicon.ico" />
+     <title>13</title>
+     <style>
+          body {
+               font-size: 20px;
+               padding: 10px 12px;
+          }
+
+          h1 {
+               font-size: 1.6em;
+               margin: 0 0 0.5em 0;
+          }
+     </style>
+</head>
+
+<body>
+     <h1>Star Wars Films</h1>
+     <div id="spinner">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif?20151024034921">
+     </div>
+     <div id="output"></div>
+     <script>
+          const API_URL = "https://starwars.egghead.training/";
+
+          const output = document.getElementById("output");
+          const spinner = document.getElementById("spinner");
+
+          async function queryAPI(endpoint) {
+               const response = await fetch(API_URL + endpoint);
+               if (response.ok) {
+                    return response.json();
+               }
+               throw Error("Unsuccessful response");
+          }
+
+          async function main() {
+               try {
+                    const [films, planets, species] = await Promise.all([
+                         queryAPI("films"),
+                         queryAPI("planets"),
+                         queryAPI("species")
+                    ]);
+                    output.innerText =
+                         `${films.length} films, ` +
+                         `${planets.length} planets, ` +
+                         `${species.length} species`;
+               } catch (error) {
+                    console.warn(error);
+                    output.innerText = ":(";
+               } finally {
+                    spinner.remove();
+               }
+          }
+
+          main();
+     </script>
+</body>
+
+</html>
